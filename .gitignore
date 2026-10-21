@@ -1,0 +1,5 @@
+/workspace/
+/reports/
+/.env
+/.env.*
+!.env.example
