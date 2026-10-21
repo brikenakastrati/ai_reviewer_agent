@@ -31,5 +31,34 @@ Roli përdor standard ekspertize, por nuk pretendon përvojë reale njerëzore. 
 - `gh`: autentikim dhe GitHub API me lejet që përdoruesi ka dhënë.
 - `git`: identifikimi i branch-it/commit-it dhe shqyrtimi i historikut e diff-eve.
 - `scc`: statistika për gjuhët, skedarët dhe rreshtat e kodit.
+- `copilot`: opsional, për raportin AI. Pa të, aplikacioni prodhon vetëm raport prove dhe nuk shpik notë.
 
-Në Windows instalo `scc` nga burimi winget me `winget install --id BenBoyter.scc --exact --source winget`. Mjetet janë opsionale; mungesa e tyre duhet shënuar në raport, jo zëvendësuar me pretendime të paverifikuara. Nuk kërkohen varësi aplikacioni ose token-e të ruajtura në repo. Raportet dhe kopjet lokale të projekteve mbeten jashtë kontrollit të versionit.
+## Aplikacioni lokal
+
+Kërkohet Python 3.10+ dhe GitHub CLI. Për raport AI nevojitet edhe Copilot CLI; `scc` është opsional.
+
+Në Windows:
+
+```powershell
+gh auth login
+winget install --id BenBoyter.scc --exact --source winget
+winget install GitHub.Copilot
+copilot login
+py app.py
+```
+
+Hapet vetë `http://127.0.0.1:8765`. Për ta ndalur, shtyp `Ctrl+C` në terminal. Nëse porta është e zënë, vendos `$env:REVIEWER_PORT = "8766"` para `py app.py`.
+
+Në faqen e aplikacionit mund të zgjedhësh një repo nga llogaria jote ose të vendosësh URL/`owner/repository` për një repo tjetër ku ke qasje. Mund të zgjedhësh branch ose commit; aplikacioni e zgjidh në SHA të saktë para se të marrë snapshot-in. Copilot CLI, kur është instaluar dhe i kyçur, shqyrton vetëm snapshot-in e atij commit-i me mjetet `view`, `grep` dhe `glob`; mjetet shell, edit dhe execute nuk lejohen, dhe kodi/testet nuk ekzekutohen. Raporti shfaqet si pamje e strukturuar dhe mund të eksportohet si HTML; të dhënat strukturore ruhen te `reports/`. Raportet e vjetra Markdown mbeten të hapshme si arkiv, pa notë të verifikuar. Nëse skedarët nuk mund të shqyrtohen ose përgjigjja nuk është e vlefshme, raporti shënohet i paplotë dhe nuk cakton notë.
+
+Shkaku i raportit të mëparshëm ishte konfigurimi i gabuar i mjeteve: ai përdorte emrat `read` dhe `search`, por Copilot CLI pret `view`, `grep` dhe `glob`. Për këtë arsye modeli nuk kishte mjetet për të hapur ose kërkuar skedarët, edhe pse aplikacioni kishte shkarkuar snapshot-in dhe prodhuar statistikat `scc`. Aplikacioni tani i kufizon mjetet te këto tri veprime read-only dhe u jep leje shprehimisht për ekzekutim jo-interaktiv.
+
+Aplikacioni dëgjon vetëm në loopback, nuk kërkon varësi Python shtesë dhe nuk ruan token-e në repo. Burimi i projektit dërgohet te modeli yt Copilot vetëm kur nis raportin AI; kontrollo politikat e privatësisë/AI të organizatës para analizës së repos private ose me të dhëna të ndjeshme. Snapshot-et kalimtare fshihen pas raportimit; raportet ruhen lokalisht te `reports/`. Mos e ekspozo këtë server në rrjet ose internet pa projektuar autentikim, autorizim dhe mbrojtje shtesë.
+
+Ekzekuto testet me:
+
+```powershell
+py -m unittest discover -s tests -v
+```
+
+Mungesa e mjeteve duhet shënuar në raport, jo zëvendësuar me pretendime të paverifikuara. Raportet dhe snapshot-et lokale mbeten jashtë kontrollit të versionit.

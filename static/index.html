@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10131b">
+    <title>Project Reviewer</title>
+    <link rel="stylesheet" href="/app.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Project Reviewer home">
+        <span class="brand-mark">R</span>
+        <span>review<span class="brand-light">desk</span></span>
+      </a>
+      <div class="local-indicator"><span class="pulse"></span> Private workspace <span class="divider"></span> localhost only</div>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> UNIVERSITY PROJECT REVIEW</div>
+        <h1>Good work deserves<br><span>a closer look.</span></h1>
+        <p class="hero-copy">Review student repositories with transparent evidence, a consistent rubric, and careful AI/ML methodology.</p>
+        <form id="quick-review" class="quick-review">
+          <span class="input-icon" aria-hidden="true">↗</span>
+          <input id="repo-input" name="repository" autocomplete="off" placeholder="Paste a GitHub URL or enter owner/repository" aria-label="GitHub repository">
+          <button class="button button-primary" type="submit">Review project <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="hero-note"><span class="lock-icon">⌑</span> Read-only review · No student code is executed · Reports stay on this machine</div>
+      </section>
+
+      <section class="status-strip" aria-label="Local tools status">
+        <div class="status-item">
+          <span class="status-icon">GH</span>
+          <span class="status-copy"><strong>GitHub CLI</strong><span id="github-status">Checking authentication…</span></span>
+          <span class="status-dot" id="github-dot"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-icon ai-icon">✳</span>
+          <span class="status-copy"><strong>AI reviewer</strong><span id="copilot-status">Checking local CLI…</span></span>
+          <span class="status-dot" id="copilot-dot"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-icon code-icon">{ }</span>
+          <span class="status-copy"><strong>Code metrics</strong><span id="scc-status">Checking scc…</span></span>
+          <span class="status-dot" id="scc-dot"></span>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="main-column">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow eyebrow-muted">YOUR AUTHORIZED PROJECTS</div>
+              <h2>Repositories <span class="count-pill" id="repo-count">—</span></h2>
+            </div>
+            <label class="search-box">
+              <span aria-hidden="true">⌕</span>
+              <input id="repo-search" type="search" placeholder="Filter repositories" aria-label="Filter repositories">
+              <kbd>/</kbd>
+            </label>
+          </div>
+          <div id="repo-state" class="empty-state">
+            <div class="loader"></div>
+            <p>Loading repositories you can access…</p>
+          </div>
+          <div id="repo-grid" class="repo-grid"></div>
+        </div>
+
+        <aside class="side-column">
+          <section class="side-card rubric-card">
+            <div class="card-kicker">SCORING FRAMEWORK</div>
+            <h3>A clear, balanced rubric.</h3>
+            <p>Every score should connect to something verifiable—not just a hunch.</p>
+            <div class="rubric-list">
+              <div><span>01</span><span>Functionality &amp; correctness</span><b>25</b></div>
+              <div><span>02</span><span>Design &amp; maintainability</span><b>15</b></div>
+              <div><span>03</span><span>Testing &amp; verification</span><b>15</b></div>
+              <div><span>04</span><span>Documentation</span><b>10</b></div>
+              <div><span>05</span><span>Efficiency</span><b>10</b></div>
+              <div><span>06</span><span>Git process</span><b>10</b></div>
+              <div><span>07</span><span>AI/ML methodology</span><b>15</b></div>
+            </div>
+            <div class="rubric-total"><span>Total possible</span><strong>100 <small>pts</small></strong></div>
+          </section>
+
+          <section class="side-card reports-card">
+            <div class="side-heading"><div><div class="card-kicker">SAVED LOCALLY</div><h3>Recent reports</h3></div><span class="file-icon">▤</span></div>
+            <div id="report-list" class="report-list"><p class="muted">Reports will appear here after a review.</p></div>
+          </section>
+
+          <div class="integrity-note"><span>✳</span><p><strong>Similarity is a signal, not a verdict.</strong> Any potential overlap is described with evidence and requires human review.</p></div>
+        </aside>
+      </section>
+
+      <footer class="footer">
+        <span>Review Desk <span class="footer-separator">/</span> Local edition</span>
+        <span>AI assists the reviewer. An instructor makes the final assessment.</span>
+      </footer>
+    </main>
+
+    <dialog id="review-dialog" class="review-dialog">
+      <form method="dialog" class="dialog-top"><span class="dialog-kicker">START A REVIEW</span><button class="icon-button" aria-label="Close">×</button></form>
+      <div class="dialog-content">
+        <h2>Review a repository</h2>
+        <p class="dialog-description">We’ll pin the selected ref to its exact commit, gather repository evidence, and optionally run a read-only AI review.</p>
+        <form id="review-form">
+          <label for="dialog-repo">Repository</label>
+          <input id="dialog-repo" name="repository" required readonly>
+          <label for="dialog-branch">Branch or commit <span>optional</span></label>
+          <input id="dialog-branch" name="branch" placeholder="Default branch">
+          <div class="dialog-safety"><span>⌑</span><span>Repository files are untrusted and never executed. If AI review is enabled, source files are sent to your configured Copilot model; reports are saved locally.</span></div>
+          <button class="button button-primary dialog-submit" type="submit">Prepare review <span aria-hidden="true">→</span></button>
+        </form>
+      </div>
+    </dialog>
+
+    <dialog id="result-dialog" class="result-dialog">
+      <form method="dialog" class="dialog-top"><span class="dialog-kicker">REVIEW REPORT</span><button class="icon-button" aria-label="Close">×</button></form>
+      <div class="result-header">
+        <div class="loader" id="review-loader"></div>
+        <div><h2 id="result-title">Preparing review…</h2><p id="result-subtitle">Pinning a commit and collecting evidence.</p></div>
+      </div>
+      <div id="result-error" class="error-box" hidden></div>
+      <div id="result-actions" class="result-actions" hidden><button class="button button-secondary" id="download-report">Export report</button></div>
+      <div id="result-report" class="result-report" role="region" aria-label="Project review report" hidden></div>
+    </dialog>
+  </body>
+</html>
