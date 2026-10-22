@@ -145,6 +145,7 @@ class StructuredReportTests(unittest.TestCase):
         command = service.copilot_command("review prompt", Path("C:/temporary/review"))
         self.assertIn("--available-tools=view,grep,glob", command)
         self.assertIn("--allow-tool=view,grep,glob", command)
+        self.assertIn("--no-ask-user", command)
         self.assertTrue(command[-1].startswith("--add-dir="))
         self.assertFalse(any("shell" in item or "write" in item or "execute" in item for item in command))
         self.assertNotIn("--allow-all-tools", command)
