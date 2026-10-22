@@ -208,7 +208,7 @@ function renderReport(report) {
 
   const repository = report.repository || {};
   const status = report.status || "incomplete";
-  const statusLabel = report.legacy ? "Archived · not revalidated" : status === "complete" ? "Assessment complete" : status === "evidence_only" ? "Evidence only" : "Review incomplete";
+  const statusLabel = report.legacy ? "Archived · not revalidated" : status === "complete" ? "Assessment complete" : status === "partial" ? "Partial assessment" : status === "evidence_only" ? "Evidence only" : "Review incomplete";
   const intro = document.createElement("section");
   intro.className = `report-intro report-status-${status}`;
   const introTop = document.createElement("div");
@@ -407,7 +407,7 @@ function finishResult(job) {
   }
   state.activeReport = job.report || null;
   const status = state.activeReport?.status;
-  byId("result-title").textContent = status === "complete" ? "Review complete" : status === "evidence_only" ? "Evidence report ready" : "Review incomplete";
+  byId("result-title").textContent = status === "complete" ? "Review complete" : status === "partial" ? "Review complete (partial score)" : status === "evidence_only" ? "Evidence report ready" : "Review incomplete";
   byId("result-subtitle").textContent = `${job.repository} · ${job.branch} · ${job.sha}`;
   renderReport(state.activeReport);
   byId("result-report").hidden = false;

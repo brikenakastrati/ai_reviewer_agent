@@ -107,6 +107,33 @@ class StructuredReportTests(unittest.TestCase):
         self.assertEqual(report["similarity"]["status"], "not_assessed")
         self.assertEqual(report["verification"]["tests"], "Not run (read-only review).")
 
+    def test_scores_are_kept_without_explicit_status(self):
+        review = json.loads(self.complete_review())
+        del review["review_status"]
+        report = app.ReviewService.create_report(
+            {"full_name": "student/project"}, {"sha": "b" * 40}, [], [], json.dumps(review), None
+        )
+        self.assertEqual(report["status"], "complete")
+        self.assertEqual(report["scoring"]["earned"], 93)
+
+    def test_partial_categories_still_produce_a_low_confidence_score(self):
+        review = json.loads(self.complete_review())
+        review["review_status"] = "incomplete"
+        review["categories"] = [
+            {"id": "functionality", "status": "scored", "earned": 20, "possible": 25, "evidence": "ok"},
+            {"id": "design", "status": "scored", "earned": 7.6, "possible": 15, "evidence": "ok"},
+            {"id": "ai_ml", "status": "not_applicable", "earned": 0, "possible": 0, "evidence": "no AI"},
+        ]
+        report = app.ReviewService.create_report(
+            {"full_name": "student/project"}, {"sha": "b" * 40}, [], [], json.dumps(review), None
+        )
+        self.assertEqual(report["status"], "partial")
+        self.assertEqual(report["scoring"]["earned"], 28)
+        self.assertEqual(report["scoring"]["possible"], 40)
+        self.assertEqual(report["scoring"]["normalized"], 70)
+        self.assertEqual(report["scoring"]["confidence"], "low")
+        self.assertTrue(any("Testing and verification" in item for item in report["limitations"]))
+
     def test_incomplete_file_access_response_never_receives_a_score(self):
         report = app.ReviewService.create_report(
             {"full_name": "student/project"},

@@ -151,7 +151,7 @@ h2 { margin: 8px 0 0; font-size: 23px; letter-spacing: -.04em; }
 .report-intro-top, .score-header, .score-category-label, .finding-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .report-intro h3 { min-width: 0; overflow-wrap: anywhere; margin: 0; font-size: 15px; }
 .report-status-badge, .neutral-label, .confidence { flex: 0 0 auto; padding: 4px 8px; border: 1px solid var(--line-strong); border-radius: 20px; color: #aeb7c7; background: rgba(167, 180, 205, .06); font-size: 9px; text-transform: capitalize; }
-.report-status-complete .report-status-badge { border-color: rgba(131, 228, 194, .2); color: var(--mint); background: rgba(131, 228, 194, .07); }
+.report-status-complete .report-status-badge, .report-status-partial .report-status-badge { border-color: rgba(131, 228, 194, .2); color: var(--mint); background: rgba(131, 228, 194, .07); }
 .report-status-incomplete .report-status-badge { border-color: rgba(243, 203, 121, .2); color: var(--amber); background: rgba(243, 203, 121, .06); }
 .report-summary { margin: 12px 0 8px; color: #e1e6ef; font-size: 12px; line-height: 1.7; }
 .report-metadata, .report-note { margin: 0; color: #7f8a9d; font-size: 9px; overflow-wrap: anywhere; }
