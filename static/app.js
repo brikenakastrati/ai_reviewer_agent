@@ -311,7 +311,7 @@ function renderReport(report) {
     addTextList(section, report.strengths, "report-list-items");
   }
   if (report.ai_ml) {
-    const section = addReportSection(panels, "AI methodology");
+    const section = addReportSection(panels, "AI/ML methodology");
     const text = document.createElement("p");
     text.textContent = report.ai_ml;
     section.append(text);
@@ -581,7 +581,7 @@ function exportReport(report) {
     ${scoring ? `<section class="card"><h2>Score</h2><div class="score">${escapeHtml(scoring.normalized)}/100 <small>normalized · ${escapeHtml(scoring.earned)}/${escapeHtml(scoring.possible)} rubric points · ${escapeHtml(scoring.confidence)} confidence</small></div><table><thead><tr><th>Category</th><th>Score</th><th>Evidence</th></tr></thead><tbody>${categoryRows}</tbody></table></section>` : ""}
     ${findingCards ? `<section class="card"><h2>Key findings</h2><div class="grid">${findingCards}</div></section>` : ""}
     ${report.strengths?.length ? `<section class="card"><h2>Strengths</h2>${list(report.strengths)}</section>` : ""}
-    ${report.ai_ml ? `<section class="card"><h2>AI methodology</h2><p>${escapeHtml(report.ai_ml)}</p></section>` : ""}
+    ${report.ai_ml ? `<section class="card"><h2>AI/ML methodology</h2><p>${escapeHtml(report.ai_ml)}</p></section>` : ""}
     <section class="card"><h2>Verification</h2><p>${escapeHtml(report.verification?.tests || "Tests not run.")}</p>${metricRows ? `<h3>Code statistics · scc</h3><table><thead><tr><th>Language</th><th>Files</th><th>Lines</th><th>Code</th></tr></thead><tbody>${metricRows}</tbody></table>` : ""}${commitRows ? `<h3>Recent commits</h3><ul>${commitRows}</ul>` : ""}</section>
     <section class="card"><h2>Similarity</h2><p>${escapeHtml(report.similarity?.summary)}</p></section>
     ${report.limitations?.length ? `<section class="card"><h2>Limitations</h2>${list(report.limitations)}</section>` : ""}
