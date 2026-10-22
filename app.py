@@ -34,13 +34,13 @@ OWNER_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$")
 REPO_RE = re.compile(r"^[A-Za-z0-9_.-]{1,100}$")
 SAFE_BRANCH_RE = re.compile(r"^[A-Za-z0-9._/-]{1,240}$")
 RUBRIC = {
-    "functionality": ("Correctness and functionality", 25),
-    "design": ("Design and maintainability", 15),
-    "testing": ("Testing and verification", 15),
+    "ai_ml": ("AI methodology (AIMA)", 35),
+    "functionality": ("Correctness and functionality", 20),
+    "design": ("Design and maintainability", 10),
+    "testing": ("Testing and verification", 10),
     "documentation": ("Documentation and reproducibility", 10),
     "efficiency": ("Efficiency and resource use", 10),
-    "commits": ("Commit process", 10),
-    "ai_ml": ("AI/ML methodology", 15),
+    "commits": ("Commit process", 5),
 }
 jobs: dict[str, dict[str, Any]] = {}
 jobs_lock = threading.Lock()
@@ -678,8 +678,8 @@ class ReviewService:
                         "modify files. Return only valid JSON with these top-level keys: review_status "
                         "('complete' or 'incomplete'), summary, confidence ('high', 'medium', or 'low'), "
                         "categories, strengths, findings, ai_ml, next_steps. A complete review must include one "
-                        "category per id: functionality (max 25), design (15), testing (15), documentation (10), "
-                        "efficiency (10), commits (10), ai_ml (15). Each category has id, status, earned, possible, "
+                        "category per id: ai_ml (max 35), functionality (20), design (10), testing (10), documentation (10), "
+                        "efficiency (10), commits (5). Each category has id, status, earned, possible, "
                         "evidence; use status 'scored', except ai_ml may use 'not_applicable' with earned and "
                         "possible both 0. If files cannot be inspected or evidence is insufficient, set review_status "
                         "to 'incomplete' and categories to []; never invent scores or claim a review is complete. "
